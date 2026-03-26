@@ -42,3 +42,28 @@ python3 deploy/deploy_remote.py
 sleep 30
 echo "Generating traffic..."
 python3 traffic_gen.py
+
+# Get agent engine deployment ID
+REASONING_ENGINE_DEPLOYMENT_ID=$(curl -X GET "https://aiplatform.googleapis.com/v1/projects/$PROJECT_ID/locations/$REGION/reasoningEngines"     -H "Authorization: Bearer $(gcloud auth print-access-token)" | jq -r '.? | .reasoningEngines[].name') && \
+echo "Agent Engine Resource ID: $REASONING_ENGINE_DEPLOYMENT_ID"
+
+# Integrate Agent Engine instance into Gemini Enterprise
+curl -X POST \
+  -H "Authorization: Bearer $(gcloud auth print-access-token)" \
+  -H "Content-Type: application/json" \
+  -H "X-Goog-User-Project: ${PROJECT_ID}" \
+  "https://discoveryengine.googleapis.com/v1alpha/projects/${PROJECT_ID}/locations/global/collections/default_collection/engines/promotion-agent-demo/assistants/default_assistant/agents" \
+  -d @- <<EOF
+{
+  "displayName": "Promotion Agent",
+  "description": "Creates promotions for retail products based on local events and weather in a particular US city.",
+  "adk_agent_definition": {
+    "tool_settings": {
+      "tool_description": "You are a promotional agent for retail stores. Your task is to create promotions for retail products based on local events and weather in a particular US city."
+    },
+    "provisioned_reasoning_engine": {
+      "reasoning_engine": "${REASONING_ENGINE_DEPLOYMENT_ID}"
+    }
+  }
+}
+EOF
