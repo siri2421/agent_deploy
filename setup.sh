@@ -1,9 +1,6 @@
 #!/bin/bash
 # Mandatory Prefix
 
-## Add new comment to test
-set -e
-
 echo "STARTUP-SCRIPT START" 
 
 # variable initialization
@@ -33,9 +30,8 @@ export STAGING_BUCKET="agent-staging-bucket-$PROJECT_ID"
 
 
 #sudo apt update && sudo apt install python3-venv -y && \
-python3 -m venv .venv && \
-./.venv/bin/pip install -r deploy/requirements.txt
-./.venv/bin/python deploy/deploy_remote.py
+pip install -r deploy/requirements.txt
+python deploy/deploy_remote.py
 
 
 
