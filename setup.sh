@@ -9,16 +9,18 @@ export ZONE=$(gcloud compute project-info describe \
 --format="value(commonInstanceMetadata.items[google-compute-default-zone])") && \
 export REGION=$(gcloud compute project-info describe \
 --format="value(commonInstanceMetadata.items[google-compute-default-region])") && \
-
+export ACTUAL_MCP_URL=$(gcloud run services describe mcp-weather-v1 \
+    --format='value(status.url)' \
+    --region=us-central1 \
+    --quiet) && \
 # Download and update some files from demand-promo-agent repo static-assets bucket
 gcloud storage cp gs://$PROJECT_ID-static-assets-bucket/demand-promo-agent.zip . && \
 unzip demand-promo-agent.zip && \
 rm demand-promo-agent.zip && \
 cd ~/agent_deploy/demand-promo-agent && \
-sed -i -e "s/kar-ai1/$PROJECT_ID/g" ~/agent_deploy/demand-promo-agent/variables.tf && \
-sed -i -e "s/us-central1-a/$ZONE/g" ~/agent_deploy/demand-promo-agent/modules/compute/variables.tf && \
-sed -i -e "s/us-central1-a/$ZONE/g" ~/agent_deploy/demand-promo-agent/main.tf && \
-sed -i -e "s/promo-agent/promo_agent/g" ~/agent_deploy/demand-promo-agent/modules/storage/main.tf && \
+sed -i "s/adkprj1/$PROJECT_ID/g" ~/agent_deploy/demand-promo-agent/promo-agent/multi_agent/.env && \
+sed -i "s|https://mcp-weather-v1-32443485880.us-central1.run.app|$ACTUAL_MCP_URL|g" ~/agent_deploy/demand-promo-agent/promo-agent/multi_agent/.env && \
+
 
 # Deploy Agent Engine instance
 cd ~/agent_deploy/demand-promo-agent/promo_agent 
