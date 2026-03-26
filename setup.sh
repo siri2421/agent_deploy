@@ -8,6 +8,8 @@ export ACTUAL_MCP_URL=$(gcloud run services describe mcp-weather-v1 \
     --region=us-central1 \
     --quiet)
 
+export FULL_MCP_ENDPOINT="${ACTUAL_MCP_URL}/mcp/"
+
 # 2. Download and extract
 gcloud storage cp gs://$PROJECT_ID-static-assets-bucket/demand-promo-agent.zip .
 unzip -o demand-promo-agent.zip
@@ -21,7 +23,8 @@ ENV_FILE="./promo_agent/multi_agent/.env"
 
 if [ -f "$ENV_FILE" ]; then
     sed -i "s/adkprj1/$PROJECT_ID/g" "$ENV_FILE"
-    sed -i "s|https://mcp-weather-v1-32443485880.us-central1.run.app|$ACTUAL_MCP_URL|g" "$ENV_FILE"
+    sed -i "s|https://mcp-weather-v1-.*\.run\.app/mcp/|$FULL_MCP_ENDPOINT|g" "$ENV_FILE"
+    sed -i "s|https://mcp-weather-v1-.*\.run\.app|$ACTUAL_MCP_URL|g" "$ENV_FILE"
     echo ".env updated successfully."
 else
     echo "ERROR: .env file not found at $ENV_FILE"
