@@ -27,16 +27,15 @@ sed -i -e "s/promo-agent/promo_agent/g" ~/agent_deploy/demand-promo-agent/module
 cd ~/agent_deploy/demand-promo-agent/promo_agent 
 
 
-  # craete deploy_remote python file to deploy agent
-  export PROMO_SA="promo-agent-sa@$PROJECT_ID.iam.gserviceaccount.com"
-  export STAGING_BUCKET="agent-staging-bucket-$PROJECT_ID"
+# craete deploy_remote python file to deploy agent
+export PROMO_SA="promo-agent-sa@$PROJECT_ID.iam.gserviceaccount.com"
+export STAGING_BUCKET="agent-staging-bucket-$PROJECT_ID"
 
 
-  sudo apt update && sudo apt install python3-venv -y && \
-  python3 -m venv .venv && \
-  . .venv/bin/activate && \
-  pip install -r deploy/requirements.txt && \
-  python deploy/deploy_remote.py && \
+#sudo apt update && sudo apt install python3-venv -y && \
+python3 -m venv .venv && \
+./.venv/bin/pip install -r deploy/requirements.txt
+./.venv/bin/python deploy/deploy_remote.py
 
 
 
