@@ -16,15 +16,15 @@ export REGION=$(gcloud compute project-info describe \
 # Download and update some files from demand-promo-agent repo static-assets bucket
 gcloud storage cp gs://$PROJECT_ID-static-assets-bucket/demand-promo-agent.zip . && \
 unzip demand-promo-agent.zip && \
-rm ~/demand-promo-agent.zip && \
-cd ~/demand-promo-agent && \
+rm demand-promo-agent.zip && \
+cd demand-promo-agent && \
 sed -i -e "s/kar-ai1/$PROJECT_ID/g" ~/demand-promo-agent/variables.tf && \
 sed -i -e "s/us-central1-a/$ZONE/g" ~/demand-promo-agent/modules/compute/variables.tf && \
 sed -i -e "s/us-central1-a/$ZONE/g" ~/demand-promo-agent/main.tf && \
 sed -i -e "s/promo-agent/promo_agent/g" ~/demand-promo-agent/modules/storage/main.tf && \
 
 # Deploy Agent Engine instance
-  cd ~/demand-promo-agent/promo_agent 
+  cd demand-promo-agent/promo_agent 
   #mkdir deploy && \
 
   # craete deploy_remote python file to deploy agent
