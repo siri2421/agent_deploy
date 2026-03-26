@@ -35,7 +35,7 @@ export PROMO_SA="promo-agent-sa@$PROJECT_ID.iam.gserviceaccount.com"
 export STAGING_BUCKET="agent-staging-bucket-$PROJECT_ID"
 
 # 5. Install and Run
-pip install -r deploy/requirements.txt --user
+pip install -r deploy/requirements.txt
 python3 deploy/deploy_remote.py
 
 # 6. Traffic Generation
