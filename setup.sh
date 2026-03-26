@@ -1,8 +1,13 @@
 #!/bin/bash
-echo "STARTUP-SCRIPT START" 
+echo "DEPLOYMENT-SCRIPT START" 
 
 # 1. Variable initialization
 export PROJECT_ID=$(gcloud config get-value project)
+export ZONE=$(gcloud compute project-info describe \
+--format="value(commonInstanceMetadata.items[google-compute-default-zone])") && \
+export REGION=$(gcloud compute project-info describe \
+--format="value(commonInstanceMetadata.items[google-compute-default-region])") && \
+
 export ACTUAL_MCP_URL=$(gcloud run services describe mcp-weather-v1 \
     --format='value(status.url)' \
     --region=us-central1 \
@@ -23,6 +28,7 @@ ENV_FILE="./promo_agent/multi_agent/.env"
 
 if [ -f "$ENV_FILE" ]; then
     sed -i "s/adkprj1/$PROJECT_ID/g" "$ENV_FILE"
+    sed -i "s|projects/[^/]*|projects/$PROJECT_ID|g" "$ENV_FILE"
     sed -i "s|https://mcp-weather-v1-.*\.run\.app/mcp/|$FULL_MCP_ENDPOINT|g" "$ENV_FILE"
     sed -i "s|https://mcp-weather-v1-.*\.run\.app|$ACTUAL_MCP_URL|g" "$ENV_FILE"
     echo ".env updated successfully."
@@ -70,3 +76,5 @@ curl -X POST \
   }
 }
 EOF
+
+echo "DEPLOYMENT-SCRIPT COMPLETE"
