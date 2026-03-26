@@ -18,8 +18,15 @@ gcloud storage cp gs://$PROJECT_ID-static-assets-bucket/demand-promo-agent.zip .
 unzip demand-promo-agent.zip && \
 rm demand-promo-agent.zip && \
 cd ~/agent_deploy/demand-promo-agent && \
-sed -i "s/adkprj1/$PROJECT_ID/g" ~/agent_deploy/demand-promo-agent/promo-agent/multi_agent/.env && \
-sed -i "s|https://mcp-weather-v1-32443485880.us-central1.run.app|$ACTUAL_MCP_URL|g" ~/agent_deploy/demand-promo-agent/promo-agent/multi_agent/.env && \
+ENV_FILE="./promo-agent/multi_agent/.env"
+
+if [ -f "$ENV_FILE" ]; then
+    sed -i "s/adkprj1/$PROJECT_ID/g" "$ENV_FILE"
+    sed -i "s|https://mcp-weather-v1-32443485880.us-central1.run.app|$ACTUAL_MCP_URL|g" "$ENV_FILE"
+    echo ".env updated successfully."
+else
+    echo "ERROR: .env file not found at $ENV_FILE"
+fiand-promo-agent/promo-agent/multi_agent/.env && \
 
 
 # Deploy Agent Engine instance
