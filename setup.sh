@@ -17,15 +17,15 @@ export REGION=$(gcloud compute project-info describe \
 gcloud storage cp gs://$PROJECT_ID-static-assets-bucket/demand-promo-agent.zip . && \
 unzip demand-promo-agent.zip && \
 rm demand-promo-agent.zip && \
-cd demand-promo-agent && \
-sed -i -e "s/kar-ai1/$PROJECT_ID/g" ~/demand-promo-agent/variables.tf && \
-sed -i -e "s/us-central1-a/$ZONE/g" ~/demand-promo-agent/modules/compute/variables.tf && \
-sed -i -e "s/us-central1-a/$ZONE/g" ~/demand-promo-agent/main.tf && \
-sed -i -e "s/promo-agent/promo_agent/g" ~/demand-promo-agent/modules/storage/main.tf && \
+cd ~/agent_deploy/demand-promo-agent && \
+sed -i -e "s/kar-ai1/$PROJECT_ID/g" ~/agent_deploy/demand-promo-agent/variables.tf && \
+sed -i -e "s/us-central1-a/$ZONE/g" ~/agent_deploy/demand-promo-agent/modules/compute/variables.tf && \
+sed -i -e "s/us-central1-a/$ZONE/g" ~/agent_deploy/demand-promo-agent/main.tf && \
+sed -i -e "s/promo-agent/promo_agent/g" ~/agent_deploy/demand-promo-agent/modules/storage/main.tf && \
 
 # Deploy Agent Engine instance
-  cd demand-promo-agent/promo_agent 
-  #mkdir deploy && \
+cd ~/agent_deploy/demand-promo-agent/promo_agent 
+
 
   # craete deploy_remote python file to deploy agent
   export PROMO_SA="promo-agent-sa@$PROJECT_ID.iam.gserviceaccount.com"
